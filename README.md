@@ -57,7 +57,7 @@ gambling operators.
         trace ID from a system such as zipkin.
 
    ### Return value
-        A Webservice::GAMSTOP::Response object
+   *    A Webservice::GAMSTOP::Response object
 
 # AUTHOR
     binary.com <cpan@binary.com>

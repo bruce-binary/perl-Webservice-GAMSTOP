@@ -67,28 +67,28 @@ returns GAMSTOP unique id for request (provided in response headers)
 =cut
 
 sub new {
-    my ($class, $query) = @_;
-    my $self = \$query;
-    bless $self, $class;
+    my ($class, %args) = @_;
 
-    sub is_excluded {
-        my $flag = shift->{exclusion};
+    return bless \%args, $class;
+}
 
-        if ($flag) {
-            return 0 if $flag eq 'N' or $flag eq 'P';
-            return 1 if $flag eq 'Y';
-        }
+sub is_excluded {
+    my $flag = shift->{date};
 
-        return 0;
+    if ($flag) {
+        return 0 if $flag eq 'N' or $flag eq 'P';
+        return 1 if $flag eq 'Y';
     }
 
-    sub get_unique_id {
-        return shift->{unique_id} // undef;
-    }
+    return 0;
+}
 
-    sub get_date {
-        return shift->{date} // undef;
-    }
+sub get_unique_id {
+    return shift->{unique_id} // undef;
+}
+
+sub get_date {
+    return shift->{date} // undef;
 }
 
 1;
