@@ -1,4 +1,5 @@
 package Webservice::GAMSTOP;
+# ABSTRACT: GAMSTOP API Client Implementation
 
 use strict;
 use warnings;
@@ -6,9 +7,11 @@ use warnings;
 use Moo;
 use Mojo::UserAgent;
 
+use Webservice::GAMSTOP::Response;
+
 our $VERSION = '0.001';
 
-=head1 NAME
+=head1 Webservice::GAMSTOP
 
 Webservice::GAMSTOP - GAMSTOP API Client Implementation
 
@@ -16,8 +19,10 @@ Webservice::GAMSTOP - GAMSTOP API Client Implementation
 
     use Webservice::GAMSTOP;
     my $instance = Webservice::GAMSTOP->new(
-        api_url => '<url>',
-        api_key => '<key>'
+        api_url => '<gamstop_api_url>',
+        api_key => '<gamstop_api_key>',
+        # optional (defaults to 5 seconds)
+        timeout => 10,
     );
 
     $instance->get_exclusion_for(
@@ -40,35 +45,6 @@ own "Unique API Key" from [GAMSTOP](https://www.gamstop.co.uk/).
 
 =cut
 
-=head1 METHODS
-
-=head2 new
-
-    my $instance = Webservice::GAMSTOP->new(...)
-
-=head3 Required parameters
-
-=over 4
-
-* api_url: GAMSTOP api endpoint
-* api_key: unique api key provided by GAMSTOP
-
-=back
-
-=head3 Optional parameters
-
-=over 4
-
-* timeout: specify a timeout (default to 5 seconds)
-
-=back
-
-=head3 Return value
-
-A new Webservice::GAMSTOP object
-
-=cut
-
 has api_url => (
     is       => 'ro',
     required => 1,
@@ -84,28 +60,44 @@ has timeout => (
     default => 5,
 );
 
+=head1 METHODS
+
 =head2 get_exclusion_for
 
-Given user details return exclusion response
+Given user details return exclusion response object
 
 =head3 Required parameters
 
 =over 4
 
-* first_name   : First name of person, only 20 characters are significant
-* last_name    : Last name of person, only 20 characters are significant
-* date_of_birth: Date of birth in ISO format (yyyy-mm-dd)
-* email        : Email address
-* postcode     : Postcode - spaces not significant
+=item * first_name   : First name of person, only 20 characters are significant
+
+=item * last_name    : Last name of person, only 20 characters are significant
+
+=item * date_of_birth: Date of birth in ISO format (yyyy-mm-dd)
+
+=item * email        : Email address
+
+=item * postcode     : Postcode (spaces not significant)
 
 =back
 
-=over 4 Optional parameters
+=head3  Optional parameters
+
+=over 4
 
 x_trace_id: A freeform field that is put into audit log that can be used
 by the caller to identify a request. This might be something to indicate
 the person being checked, a unique request ID, GUID, or a trace ID from
 a system such as zipkin.
+
+=back
+
+=head3 Return value
+
+=over 4
+
+A Webservice::GAMSTOP::Response object
 
 =back
 
@@ -163,36 +155,6 @@ sub get_exclusion_for {
     );
 }
 
-package Webservice::GAMSTOP::Response;
-
-sub _new {
-    my ($class, $query) = @_;
-    my $self = \$query;
-    bless $self, $class;
-
-    sub get_unique_id {
-        return shift->{unique_id};
-    }
-
-    sub get_date {
-        return shift->{date};
-    }
-
-    sub is_excluded {
-        my $flag = shift->{exclusion};
-
-        # GAMSTOP Matching Service should return one of three valid
-        # responses, a Y, a N, or a P
-        if ($flag) {
-            return 0 if $flag eq 'N';
-
-            return 1 if $flag eq 'Y' or $flag eq 'P';
-        }
-
-        return 0;
-    }
-}
-
 1;
 __END__
 
@@ -207,5 +169,4 @@ This software is copyright (c) 2018 by binary.com.
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=back
-
+=cut
