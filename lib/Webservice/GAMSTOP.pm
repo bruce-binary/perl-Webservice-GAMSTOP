@@ -4,28 +4,29 @@ use strict;
 use warnings;
 
 use Moo;
+use Mojo::UserAgent;
 
 our $VERSION = '0.001';
 
 =head1 NAME
 
-Webservice::GAMSTOP - Module abstract
+Webservice::GAMSTOP - GAMSTOP API Client Implementation
 
 =head1 SYNOPSIS
 
     use Webservice::GAMSTOP;
-    my $instance = Webservice::GAMSTOP->new({
+    my $instance = Webservice::GAMSTOP->new(
         server_url => '<url>',
         api_key    => '<key>'
-    });
+    );
 
-    $instance->get_exclusion_for({
+    $instance->get_exclusion_for(
         first_name    => 'Harry',
         last_name     => 'Potter',
         email         => 'harry.potter@example.com',
         date_of_birth => '1970-01-01',
         postcode      => 'hp11aa',
-    });
+    );
 
 =head1 DESCRIPTION
 
@@ -43,30 +44,104 @@ own "Unique API Key" from [GAMSTOP](https://www.gamstop.co.uk/).
 
 =head2 new
 
-    my $instance = Webservice::GAMSTOP->new($hashref)
+    my $instance = Webservice::GAMSTOP->new(...)
 
 =head3 Required parameters
 
 =over 4
 
-* server_url - api endpoint
-* api_key    - unique api key provided by GAMSTOP
+* api_url: api endpoint
+* api_key: unique api key provided by GAMSTOP
 
 =back
 
+=head3 Optional parameters
+
+=over 4
+
+* timeout: specify a timeout (default to 5 seconds)
+
+=back
+
+=head3 Return value
+
+A new Webservice::GAMSTOP object
+
 =cut
 
-has server_url => (
+has api_url => (
     is       => 'ro',
-    isa      => 'Str',
     required => 1,
 );
 
 has api_key => (
     is       => 'ro',
-    isa      => 'Str',
     required => 1,
 );
+
+has timeout => (
+    is      => 'ro',
+    default => 10,
+);
+
+=head2 get_exclusion_for
+
+Given user details return exclusion response
+
+=head3 Required parameters
+
+=over 4
+
+* first_name   : First  name  of  person,  only  20  characters  are  significant
+* last_name    : Last  name  of  person,  only  20  characters  are  significant
+* date_of_birth: Date  of  birth  in  ISO  format  (yyyy-mm-dd)
+* email        : Email  address
+* postcode     : Postcode  - spaces  not  significant
+
+=back
+
+=over 4 Optional parameters
+
+x_trace_id: A freeform field that is put into audit log that can be used by the
+caller to identify a request. This might be something to indicate the person being
+checked, a unique request ID, GUID, or a trace ID from a system such as zipkin.
+
+=back
+
+=cut
+
+sub get_exclusion_for {
+    my ($self, %args) = @_;
+
+    die "Missing required parameter: first_name."    unless (exists $args{'first_name'});
+    die "Missing required parameter: last_name."     unless (exists $args{'last_name'});
+    die "Missing required parameter: date_of_birth." unless (exists $args{'date_of_birth'});
+    die "Missing required parameter: email."         unless (exists $args{'email'});
+    die "Missing required parameter: postcode."      unless (exists $args{'postcode'});
+
+    my $ua = Mojo::UserAgent->new;
+    $ua->connect_timeout($self->timeout);
+
+    # required parameters
+    my $form_params = {
+        firstName   => $args{first_name},
+        lastName    => $args{last_name},
+        dateOfBirth => $args{date_of_birth},
+        email       => $args{email},
+        postcode    => $args{postcode},
+    };
+
+    # optional parameters
+    $form_params->{'X-Trace-Id'} = $args{'x_trace_id'} if $args{'x_trace_id'};
+
+    $ua->on(
+        start => sub {
+            my ($ua, $tx) = @_;
+            $tx->req->headers->header('X-API-Key' => $self->api_key);
+        });
+
+    return $ua->post($self->api_url => form => $form_params)->result;
+}
 
 1;
 
@@ -80,13 +155,6 @@ This software is copyright (c) 2018 by binary.com.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
-
-
-=head1 SEE ALSO
-
-=over 4
-
-=item *
 
 =back
 
