@@ -3,7 +3,7 @@ package Webservice::GAMSTOP::Response;
 use strict;
 use warnings;
 
-=head1 Webservice::GAMSTOP::Response
+=head1 NAME
 
 Webservice::GAMSTOP::Response - Response object for get_exclusion_for sub
 

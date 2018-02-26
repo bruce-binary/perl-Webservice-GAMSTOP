@@ -11,7 +11,7 @@ use Webservice::GAMSTOP::Response;
 
 our $VERSION = '0.001';
 
-=head1 Webservice::GAMSTOP
+=head1 NAME
 
 Webservice::GAMSTOP - GAMSTOP API Client Implementation
 
@@ -97,7 +97,7 @@ a system such as zipkin.
 
 =over 4
 
-A Webservice::GAMSTOP::Response object
+A L<Webservice::GAMSTOP::Response> object
 
 =back
 
