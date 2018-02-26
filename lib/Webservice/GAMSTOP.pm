@@ -16,8 +16,8 @@ Webservice::GAMSTOP - GAMSTOP API Client Implementation
 
     use Webservice::GAMSTOP;
     my $instance = Webservice::GAMSTOP->new(
-        server_url => '<url>',
-        api_key    => '<key>'
+        api_url => '<url>',
+        api_key => '<key>'
     );
 
     $instance->get_exclusion_for(
@@ -50,7 +50,7 @@ own "Unique API Key" from [GAMSTOP](https://www.gamstop.co.uk/).
 
 =over 4
 
-* api_url: api endpoint
+* api_url: GAMSTOP api endpoint
 * api_key: unique api key provided by GAMSTOP
 
 =back
@@ -81,7 +81,7 @@ has api_key => (
 
 has timeout => (
     is      => 'ro',
-    default => 10,
+    default => 5,
 );
 
 =head2 get_exclusion_for
@@ -92,19 +92,20 @@ Given user details return exclusion response
 
 =over 4
 
-* first_name   : First  name  of  person,  only  20  characters  are  significant
-* last_name    : Last  name  of  person,  only  20  characters  are  significant
-* date_of_birth: Date  of  birth  in  ISO  format  (yyyy-mm-dd)
-* email        : Email  address
-* postcode     : Postcode  - spaces  not  significant
+* first_name   : First name of person, only 20 characters are significant
+* last_name    : Last name of person, only 20 characters are significant
+* date_of_birth: Date of birth in ISO format (yyyy-mm-dd)
+* email        : Email address
+* postcode     : Postcode - spaces not significant
 
 =back
 
 =over 4 Optional parameters
 
-x_trace_id: A freeform field that is put into audit log that can be used by the
-caller to identify a request. This might be something to indicate the person being
-checked, a unique request ID, GUID, or a trace ID from a system such as zipkin.
+x_trace_id: A freeform field that is put into audit log that can be used
+by the caller to identify a request. This might be something to indicate
+the person being checked, a unique request ID, GUID, or a trace ID from
+a system such as zipkin.
 
 =back
 
@@ -140,10 +141,60 @@ sub get_exclusion_for {
             $tx->req->headers->header('X-API-Key' => $self->api_key);
         });
 
-    return $ua->post($self->api_url => form => $form_params)->result;
+    my $tx = $ua->post($self->api_url => form => $form_params);
+
+    if (my $response = $tx->success) {
+        my $headers = $response->headers;
+        return Webservice::GAMSTOP::Response->_new({
+            exclusion => $headers->header('x-exclusion'),
+            date      => $headers->header('date'),
+            unique_id => $headers->header('x-unique-id'),
+        });
+    } else {
+        my $err = $tx->error;
+        die $err->{code} . ' response: ' . $err->{message} if $err->{code};
+        die 'Connection error: ' . $err->{message};
+    }
+
+    return Webservice::GAMSTOP::Response->_new(
+        exclusion => undef,
+        date      => undef,
+        unique_id => undef,
+    );
+}
+
+package Webservice::GAMSTOP::Response;
+
+sub _new {
+    my ($class, $query) = @_;
+    my $self = \$query;
+    bless $self, $class;
+
+    sub get_unique_id {
+        return shift->{unique_id};
+    }
+
+    sub get_date {
+        return shift->{date};
+    }
+
+    sub is_excluded {
+        my $flag = shift->{exclusion};
+
+        # GAMSTOP Matching Service should return one of three valid
+        # responses, a Y, a N, or a P
+        if ($flag) {
+            return 0 if $flag eq 'N';
+
+            return 1 if $flag eq 'Y' or $flag eq 'P';
+        }
+
+        return 0;
+    }
 }
 
 1;
+__END__
 
 =head1 AUTHOR
 
