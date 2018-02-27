@@ -9,7 +9,21 @@ Webservice::GAMSTOP::Response - Response object for get_exclusion_for sub
 
 =head1 SYNOPSIS
 
-    my $response = Webservice::GAMSTOP->new(%args)->get_exclusion_for(%params);
+    my $instance = Webservice::GAMSTOP->new(
+        api_url => '<gamstop_api_url>',
+        api_key => '<gamstop_api_key>',
+        # optional (defaults to 5 seconds)
+        timeout => 10,
+    );
+
+    my $response = $instance->get_exclusion_for(
+        first_name    => 'Harry',
+        last_name     => 'Potter',
+        email         => 'harry.potter@example.com',
+        date_of_birth => '1970-01-01',
+        postcode      => 'hp11aa',
+    );
+
     $response->is_excluded;
     $response->get_date;
     $response->get_unique_id
@@ -20,13 +34,41 @@ This object is returned as response for get_exclusion_for.
 
 =cut
 
-=head2 METHODS
+=head1 METHODS
 
-=head3 is_excluded
+Constructor
 
-=head4 Return value
+=head2 new
+
+    my $response = Webservice::GAMSTOP::Response->new(
+        exclusion => '',
+        date      => '',
+        unique_id => '',
+    );
+
+=head3 Return value
+
+A new Webservice::GAMSTOP::Response object
+
+=cut
+
+sub new {
+    my ($class, %args) = @_;
+
+    return bless \%args, $class;
+}
+
+=head2 is_excluded
+
+Indicates whether user is self excluded or not
+
+=head3 Return value
+
+=over 4
 
 True if user is excluded on GAMSTOP i.e GAMSTOP return a Y response
+
+=back
 
 GAMSTOP Response:
 
@@ -40,37 +82,7 @@ service.
 the GAMSTOP service but their chosen minimum period of exclusion has lapsed
 and they have requested to have their self-exclusion removed
 
-=over 4
-
-=back
-
-=head3 get_date
-
-=head4 Return value
-
-returns GAMSTOP response date (provided in response headers)
-
-=over 4
-
-=back
-
-=head3 get_unique_id
-
-=head4 Return value
-
-returns GAMSTOP unique id for request (provided in response headers)
-
-=over 4
-
-=back
-
 =cut
-
-sub new {
-    my ($class, %args) = @_;
-
-    return bless \%args, $class;
-}
 
 sub is_excluded {
     my $flag = shift->{exclusion};
@@ -83,9 +95,37 @@ sub is_excluded {
     return 0;
 }
 
+=head2 get_unique_id
+
+Unique id provided in response headers
+
+=head3 Return value
+
+=over 4
+
+returns GAMSTOP unique id for request
+
+=back
+
+=cut
+
 sub get_unique_id {
     return shift->{unique_id} // undef;
 }
+
+=head2 get_date
+
+Date provided in response headers
+
+=head3 Return value
+
+=over 4
+
+returns GAMSTOP response date
+
+=back
+
+=cut
 
 sub get_date {
     return shift->{date} // undef;
