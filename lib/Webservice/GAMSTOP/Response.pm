@@ -73,7 +73,7 @@ sub new {
 }
 
 sub is_excluded {
-    my $flag = shift->{date};
+    my $flag = shift->{exclusion};
 
     if ($flag) {
         return 0 if $flag eq 'N' or $flag eq 'P';
