@@ -36,7 +36,7 @@ Webservice::GAMSTOP - GAMSTOP API Client Implementation
 =head1 DESCRIPTION
 
 This module implements a programmatic interface to
-[GAMSTOP](https://www.gamstop.co.uk/) api.
+[GAMSTOP](https://www.gamstop.co.uk/) API.
 
 =head1 PRE-REQUISITE
 

@@ -123,4 +123,4 @@ subtest 'Webservice::GAMSTOP::Response validations' => sub {
     is $response->is_excluded, 1, 'Correct excluded flag for Y';
     is $response->get_date,      $date,      'Correct date';
     is $response->get_unique_id, $unique_id, 'Correct unique_id';
-    }
+};
