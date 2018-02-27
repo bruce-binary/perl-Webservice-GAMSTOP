@@ -3,15 +3,18 @@ package Webservice::GAMSTOP::Response;
 use strict;
 use warnings;
 
+# VERSION
+
 =head1 NAME
 
 Webservice::GAMSTOP::Response - Response object for get_exclusion_for sub
 
 =head1 SYNOPSIS
 
+    use Webservice::GAMSTOP;
     my $instance = Webservice::GAMSTOP->new(
-        api_url => '<gamstop_api_url>',
-        api_key => '<gamstop_api_key>',
+        api_url => 'gamstop_api_url',
+        api_key => 'gamstop_api_key',
         # optional (defaults to 5 seconds)
         timeout => 10,
     );
@@ -40,6 +43,7 @@ Constructor
 
 =head2 new
 
+    use Webservice::GAMSTOP::Response;
     my $response = Webservice::GAMSTOP::Response->new(
         exclusion => '',
         date      => '',

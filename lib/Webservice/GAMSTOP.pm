@@ -19,8 +19,8 @@ Webservice::GAMSTOP - GAMSTOP API Client Implementation
 
     use Webservice::GAMSTOP;
     my $instance = Webservice::GAMSTOP->new(
-        api_url => '<gamstop_api_url>',
-        api_key => '<gamstop_api_key>',
+        api_url => 'gamstop_api_url',
+        api_key => 'gamstop_api_key',
         # optional (defaults to 5 seconds)
         timeout => 10,
     );
