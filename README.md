@@ -36,7 +36,8 @@ gambling operators.
 
 # METHODS
   ## get_exclusion_for
-    Given user details return exclusion response object
+    Given user details return Webservice::GAMSTOP::Response object
+    Note: it dies if an error occur connecting to GAMSTOP API endpoint
 
    ### Required parameters
     *   first_name : First name of person, only 20 characters are

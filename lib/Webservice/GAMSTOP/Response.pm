@@ -91,12 +91,7 @@ and they have requested to have their self-exclusion removed
 sub is_excluded {
     my $flag = shift->{exclusion};
 
-    if ($flag) {
-        return 0 if $flag eq 'N' or $flag eq 'P';
-        return 1 if $flag eq 'Y';
-    }
-
-    return 0;
+    return ($flag // '') eq 'Y' ? 1 : 0;
 }
 
 =head2 get_unique_id

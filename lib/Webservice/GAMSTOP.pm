@@ -64,7 +64,8 @@ has timeout => (
 
 =head2 get_exclusion_for
 
-Given user details return exclusion response object
+Given user details return L<Webservice::GAMSTOP::Response> object
+Note: it dies if an error occur connecting to GAMSTOP API endpoint
 
 =head3 Required parameters
 
@@ -135,23 +136,16 @@ sub get_exclusion_for {
 
     my $tx = $ua->post($self->api_url => form => $form_params);
 
-    if (my $response = $tx->success) {
-        my $headers = $response->headers;
-        return Webservice::GAMSTOP::Response->new(
-            exclusion => $headers->header('x-exclusion'),
-            date      => $headers->header('date'),
-            unique_id => $headers->header('x-unique-id'),
-        );
-    } else {
-        my $err = $tx->error;
+    if (my $err = $tx->error) {
         die $err->{code} . ' response: ' . $err->{message} if $err->{code};
         die 'Connection error: ' . $err->{message};
     }
 
+    my $headers = $response->headers;
     return Webservice::GAMSTOP::Response->new(
-        exclusion => undef,
-        date      => undef,
-        unique_id => undef,
+        exclusion => $headers->header('x-exclusion'),
+        date      => $headers->header('date'),
+        unique_id => $headers->header('x-unique-id'),
     );
 }
 
