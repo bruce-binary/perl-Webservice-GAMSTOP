@@ -141,7 +141,7 @@ sub get_exclusion_for {
         die 'Connection error: ' . $err->{message};
     }
 
-    my $headers = $response->headers;
+    my $headers = $tx->success->headers;
     return Webservice::GAMSTOP::Response->new(
         exclusion => $headers->header('x-exclusion'),
         date      => $headers->header('date'),

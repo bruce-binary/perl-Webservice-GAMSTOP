@@ -59,6 +59,8 @@ A new Webservice::GAMSTOP::Response object
 sub new {
     my ($class, %args) = @_;
 
+    return bless {}, $class unless %args;
+
     return bless \%args, $class;
 }
 
