@@ -64,17 +64,9 @@ sub new {
     return bless \%args, $class;
 }
 
-=head2 is_excluded
+=head2 get_exclusion
 
-Indicates whether user is self excluded or not
-
-=head3 Return value
-
-=over 4
-
-True if user is excluded on GAMSTOP i.e GAMSTOP return a Y response
-
-=back
+Exclusion flag provided in response headers
 
 GAMSTOP Response:
 
@@ -88,12 +80,18 @@ service.
 the GAMSTOP service but their chosen minimum period of exclusion has lapsed
 and they have requested to have their self-exclusion removed
 
+=head3 Return value
+
+returns GAMSTOP exclusion flag or undef if not present
+
+=over 4
+
+=back
+
 =cut
 
-sub is_excluded {
-    my $flag = shift->{exclusion};
-
-    return ($flag // '') eq 'Y' ? 1 : 0;
+sub get_exclusion {
+    return shift->{exclusion};
 }
 
 =head2 get_unique_id
@@ -104,32 +102,52 @@ Unique id provided in response headers
 
 =over 4
 
-returns GAMSTOP unique id for request
+returns GAMSTOP unique id for request or undef if not present
 
 =back
 
 =cut
 
 sub get_unique_id {
-    return shift->{unique_id} // undef;
+    return shift->{unique_id};
 }
 
 =head2 get_date
 
-Date provided in response headers
+Date provided in response headers. Format: Tue, 27 Feb 2018 02:42:01 GMT
 
 =head3 Return value
 
 =over 4
 
-returns GAMSTOP response date
+returns GAMSTOP response date or undef if not present
 
 =back
 
 =cut
 
 sub get_date {
-    return shift->{date} // undef;
+    return shift->{date};
+}
+
+=head2 is_excluded
+
+Indicates whether user is self excluded or not
+
+=head3 Return value
+
+=over 4
+
+True if user is excluded on GAMSTOP i.e GAMSTOP return a Y response else false
+
+=back
+
+=cut
+
+sub is_excluded {
+    my $flag = shift->{exclusion};
+
+    return ($flag // '') eq 'Y' ? 1 : 0;
 }
 
 1;

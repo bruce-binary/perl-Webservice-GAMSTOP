@@ -94,6 +94,7 @@ subtest 'Webservice::GAMSTOP::Response validations' => sub {
     is $response->is_excluded,   0,     'Correct excluded flag for empty arguments';
     is $response->get_date,      undef, 'Date is undef for empty arguments';
     is $response->get_unique_id, undef, 'Unique id is undef for empty arguments';
+    is $response->get_exclusion, undef, 'Exclusion flag is undef for empty arguments';
 
     my ($date, $unique_id) = ('Tue, 27 Feb 2018 04:21:23 GMT', '81991dae-5a3beb15-0114defb');
 
@@ -105,6 +106,7 @@ subtest 'Webservice::GAMSTOP::Response validations' => sub {
     is $response->is_excluded, 0, 'Correct excluded flag for P';
     is $response->get_date,      $date,      'Correct date';
     is $response->get_unique_id, $unique_id, 'Correct unique_id';
+    is $response->get_exclusion, 'P', 'Correct exclusion flag';
 
     $response = Webservice::GAMSTOP::Response->new(
         exclusion => 'N',
@@ -114,6 +116,7 @@ subtest 'Webservice::GAMSTOP::Response validations' => sub {
     is $response->is_excluded, 0, 'Correct excluded flag for N';
     is $response->get_date,      $date,      'Correct date';
     is $response->get_unique_id, $unique_id, 'Correct unique_id';
+    is $response->get_exclusion, 'N', 'Correct exclusion flag';
 
     $response = Webservice::GAMSTOP::Response->new(
         exclusion => 'Y',
@@ -123,4 +126,5 @@ subtest 'Webservice::GAMSTOP::Response validations' => sub {
     is $response->is_excluded, 1, 'Correct excluded flag for Y';
     is $response->get_date,      $date,      'Correct date';
     is $response->get_unique_id, $unique_id, 'Correct unique_id';
+    is $response->get_exclusion, 'Y', 'Correct exclusion flag';
 };
