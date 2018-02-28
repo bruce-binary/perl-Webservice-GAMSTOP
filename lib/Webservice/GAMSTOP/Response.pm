@@ -29,8 +29,8 @@ Webservice::GAMSTOP::Response - Response object for get_exclusion_for sub
 
     $response->is_excluded;
     $response->get_date;
-    $response->get_unique_id
-    $response->get_exclusion
+    $response->get_unique_id;
+    $response->get_exclusion;
 
 =head1 DESCRIPTION
 
