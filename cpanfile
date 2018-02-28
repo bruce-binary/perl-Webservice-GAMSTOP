@@ -1,4 +1,5 @@
 requires 'Moo';
+requires 'Email::Valid';
 requires 'Mojo::UserAgent';
 requires 'indirect',    '>= 0.37';
 
