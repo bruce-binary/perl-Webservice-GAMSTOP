@@ -61,6 +61,14 @@ has timeout => (
     default => 5,
 );
 
+has _ua => (
+    is => 'lazy',
+);
+
+sub _build__ua {
+    return Mojo::UserAgent->new->connect_timeout(shift->timeout);
+}
+
 =head1 METHODS
 
 =head2 get_exclusion_for
@@ -122,9 +130,6 @@ sub get_exclusion_for {
     die 'Error - Invalid email.' unless Email::Valid->address($args{email});
     die 'Error - Invalid postcode.' unless $args{postcode} =~ /^[^+]{0,20}$/;
 
-    my $ua = Mojo::UserAgent->new;
-    $ua->connect_timeout($self->timeout);
-
     # required parameters
     my $form_params = {
         firstName   => $args{first_name},
@@ -137,9 +142,10 @@ sub get_exclusion_for {
     # optional parameters
     $form_params->{'X-Trace-Id'} = $args{x_trace_id} if $args{x_trace_id};
 
+    my $ua = $self->_ua;
     $ua->on(
         start => sub {
-            my ($ua, $tx) = @_;
+            my ($useragent, $tx) = @_;
             $tx->req->headers->header('X-API-Key' => $self->api_key);
         });
 
