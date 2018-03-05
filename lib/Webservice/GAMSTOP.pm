@@ -116,19 +116,19 @@ A L<Webservice::GAMSTOP::Response> object
 sub get_exclusion_for {
     my ($self, %args) = @_;
 
-    die "Error - Missing required parameter: first_name."    unless (exists $args{first_name});
-    die "Error - Missing required parameter: last_name."     unless (exists $args{last_name});
-    die "Error - Missing required parameter: date_of_birth." unless (exists $args{date_of_birth});
-    die "Error - Missing required parameter: email."         unless (exists $args{email});
-    die "Error - Missing required parameter: postcode."      unless (exists $args{postcode});
+    die "Missing required parameter: first_name."    unless (exists $args{first_name});
+    die "Missing required parameter: last_name."     unless (exists $args{last_name});
+    die "Missing required parameter: date_of_birth." unless (exists $args{date_of_birth});
+    die "Missing required parameter: email."         unless (exists $args{email});
+    die "Missing required parameter: postcode."      unless (exists $args{postcode});
 
     # validate args
-    die 'Error - Invalid first name.' unless $args{first_name} =~ /^[\p{L}\s'.-]{2,50}$/;
-    die 'Error - Invalid last name.'  unless $args{last_name} =~ /^[\p{L}\s'.-]{2,50}$/;
-    die 'Error - Date of birth should be in ISO format (yyyy-mm-dd)'
+    die 'Invalid first name.' unless $args{first_name} =~ /^[\p{L}\s'.-]{2,50}$/;
+    die 'Invalid last name.'  unless $args{last_name} =~ /^[\p{L}\s'.-]{2,50}$/;
+    die 'Invalid date of birth. Date of birth should be in ISO format (yyyy-mm-dd)'
         unless $args{'date_of_birth'} =~ /^(?:\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))$/;
-    die 'Error - Invalid email.' unless Email::Valid->address($args{email});
-    die 'Error - Invalid postcode.' unless $args{postcode} =~ /^[^+]{0,20}$/;
+    die 'Invalid email.' unless Email::Valid->address($args{email});
+    die 'Invalid postcode.' unless $args{postcode} =~ /^[^+]{0,20}$/;
 
     # required parameters
     my $form_params = {
