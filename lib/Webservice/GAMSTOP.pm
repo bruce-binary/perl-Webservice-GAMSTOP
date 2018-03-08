@@ -46,15 +46,39 @@ own "Unique API Key" from [GAMSTOP](https://www.gamstop.co.uk/).
 
 =cut
 
+=head1 ATTRIBUTES
+
+L<Webservice::GAMSTOP> implements the following attributes
+
+=head2 api_url
+
+GAMSTOP API endpoint url (REQUIRED)
+
+=cut
+
 has api_url => (
     is       => 'ro',
     required => 1,
 );
 
+=head2 api_key
+
+GAMSTOP API unique key for operator (REQUIRED)
+
+=cut
+
 has api_key => (
     is       => 'ro',
     required => 1,
 );
+
+=head2 timeout
+
+Maximum amount of time in seconds establishing a
+connection may take before getting canceled
+(OPTIONAL - DEFAULT 5 seconds)
+
+=cut
 
 has timeout => (
     is      => 'ro',
