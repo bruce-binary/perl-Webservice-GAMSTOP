@@ -34,6 +34,20 @@ gambling operators.
     Before you can use this module, you'll need to obtain your own "Unique
     API Key" from [GAMSTOP](https://www.gamstop.co.uk/).
 
+# ATTRIBUTES
+    Webservice::GAMSTOP implements the following attributes
+
+  ## api_url
+    GAMSTOP API endpoint url (REQUIRED)
+
+  ## api_key
+    GAMSTOP API unique key for operator (REQUIRED)
+
+  ## timeout
+    Maximum amount of time in seconds establishing a connection may take
+    before getting canceled (OPTIONAL - DEFAULT 5 seconds)
+
+
 # METHODS
   ## get_exclusion_for
     Given user details return Webservice::GAMSTOP::Response object

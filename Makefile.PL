@@ -17,6 +17,7 @@ my %WriteMakefileArgs = (
   "MIN_PERL_VERSION" => "5.014000",
   "NAME" => "Webservice::GAMSTOP",
   "PREREQ_PM" => {
+    "Email::Valid" => 0,
     "Mojo::UserAgent" => 0,
     "Moo" => 0,
     "indirect" => "0.37"
@@ -26,8 +27,10 @@ my %WriteMakefileArgs = (
     "File::Spec" => 0,
     "IO::Handle" => 0,
     "IPC::Open3" => 0,
+    "Mojolicious::Lite" => 0,
     "Test::CheckDeps" => "0.010",
     "Test::Exception" => "0.43",
+    "Test::Mojo" => 0,
     "Test::More" => "0.98"
   },
   "VERSION" => "0.001",
@@ -38,14 +41,17 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
+  "Email::Valid" => 0,
   "ExtUtils::MakeMaker" => 0,
   "File::Spec" => 0,
   "IO::Handle" => 0,
   "IPC::Open3" => 0,
   "Mojo::UserAgent" => 0,
+  "Mojolicious::Lite" => 0,
   "Moo" => 0,
   "Test::CheckDeps" => "0.010",
   "Test::Exception" => "0.43",
+  "Test::Mojo" => 0,
   "Test::More" => "0.98",
   "indirect" => "0.37"
 );
