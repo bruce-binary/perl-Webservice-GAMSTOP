@@ -16,6 +16,10 @@ our $VERSION = '0.001';
 
 Webservice::GAMSTOP - GAMSTOP API Client Implementation
 
+=head1 VERSION
+
+version 0.001
+
 =head1 SYNOPSIS
 
     use Webservice::GAMSTOP;
