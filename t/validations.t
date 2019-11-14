@@ -85,6 +85,18 @@ subtest 'Webservice::GAMSTOP get_exclusion_for validations' => sub {
             postcode      => 'hp11aa'
         );
     }
+    qr/Missing required parameter: mobile/, 'Missing required parameter: mobile';
+
+    throws_ok {
+        $exclusion = $instance->get_exclusion_for(
+            first_name    => 'Harry',
+            last_name     => 'Potter',
+            date_of_birth => '1970-01-01',
+            email         => 'harry.potter@example.com',
+            postcode      => 'hp11aa',
+            mobile        => '07700900461'
+        );
+    }
     qr/Error - /, 'Dummy api key and url fail with connection error';
 };
 
