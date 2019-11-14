@@ -118,6 +118,10 @@ Note: it dies if an error occur connecting to GAMSTOP API endpoint
 
 =item * postcode     : Postcode (spaces not significant)
 
+=item * mobile       : UK mobile telephone number which may include spaces,
+                       hyphens and optionally be prefixed with the
+                       international dialling code(+44, 0044, +353, 00353).
+
 =back
 
 =head3  Optional parameters
@@ -149,6 +153,7 @@ sub get_exclusion_for {
     die "Missing required parameter: date_of_birth." unless (exists $args{date_of_birth});
     die "Missing required parameter: email."         unless (exists $args{email});
     die "Missing required parameter: postcode."      unless (exists $args{postcode});
+    die "Missing required parameter: mobile."        unless (exists $args{mobile});
 
     # validate args
     die 'Invalid date of birth. Date of birth should be in ISO format (yyyy-mm-dd)'
@@ -163,6 +168,7 @@ sub get_exclusion_for {
         dateOfBirth => $args{date_of_birth},
         email       => $args{email},
         postcode    => $args{postcode},
+        mobile      => $args{mobile},
     };
 
     # optional parameters
