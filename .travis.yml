@@ -9,8 +9,8 @@ before_install:
    - git config --global user.email $HOSTNAME":not-for-mail@travis-ci.org"
 install:
    - cpanm --quiet --notest Dist::Zilla Dist::Zilla::App::Command::cover App::cpm Devel::Cover::Report::Codecov
-   - cpanm --mirror=http://cpan.cpantesters.org/ $(dzil authordeps --missing)
-   - cpanm --mirror=http://cpan.cpantesters.org/ $(dzil listdeps --author --missing)
+   - cpanm --quiet --notest --mirror=http://cpan.cpantesters.org/ $(dzil authordeps --missing)
+   - cpanm --quiet --notest --mirror=http://cpan.cpantesters.org/ $(dzil listdeps --author --missing)
 script:
    - dzil smoke --release --author && dzil cover -test -report kritika && dzil xtest
 
