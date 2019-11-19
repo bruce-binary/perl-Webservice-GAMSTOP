@@ -5,13 +5,12 @@ matrix:
 perl:
    - '5.24'
 before_install:
-   - sudo apt install -y cpm
    - git config --global user.name "TravisCI"
    - git config --global user.email $HOSTNAME":not-for-mail@travis-ci.org"
 install:
    - cpanm --quiet --notest Dist::Zilla Dist::Zilla::App::Command::cover App::cpm Devel::Cover::Report::Codecov
-   - cpm install -w 2 --mirror=http://cpan.cpantesters.org/ -g $(dzil authordeps --missing)
-   - cpm install -w 2 --mirror=http://cpan.cpantesters.org/ -g $(dzil listdeps --author --missing)
+   - cpanm --mirror=http://cpan.cpantesters.org/ $(dzil authordeps --missing)
+   - cpanm --mirror=http://cpan.cpantesters.org/ $(dzil listdeps --author --missing)
 script:
    - dzil smoke --release --author && dzil cover -test -report kritika && dzil xtest
 
